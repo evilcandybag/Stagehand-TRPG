@@ -6,10 +6,10 @@ import se.stagehand.lib.scripting.ScriptComponent
 object SceneGUI extends ScriptGUI {
   val peer = classOf[Scene]
   
-  implicit def menuItem(script: ScriptComponent) = {
+  def menuItem(script: ScriptComponent) = {
     new SceneButton(script)
   }
-  implicit def editorNode(script: ScriptComponent) = {
+  def editorNode(script: ScriptComponent) = {
     new SceneNode(script)
   }
 }
