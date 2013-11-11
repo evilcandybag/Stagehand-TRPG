@@ -6,7 +6,7 @@ import scala.swing._
 import scala.swing.event.Key
 
 class Scene extends ScriptComponent with Input {
-  val displayName = "Scene"
+  override def componentName = "Scene"
   
   var effects: List[Effect] = List()
     
