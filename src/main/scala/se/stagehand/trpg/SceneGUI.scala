@@ -1,23 +1,36 @@
 package se.stagehand.trpg
 
-import se.stagehand.gui.components._
 import se.stagehand.lib.scripting.ScriptComponent
+import scala.swing.BorderPanel.Position
+import se.stagehand.swing.lib._
+import se.stagehand.swing.player.PlayerScriptNode
 
 object SceneGUI extends ScriptGUI {
   val peer = classOf[Scene]
   
   def menuItem(script: ScriptComponent) = {
-    new SceneButton(script)
+    checkScript(script)
+    new SceneButton(script.asInstanceOf[Scene])
   }
   def editorNode(script: ScriptComponent) = {
-    new SceneNode(script)
+    checkScript(script)
+    new SceneNode(script.asInstanceOf[Scene])
+  }
+  
+  def playerNode(script: ScriptComponent) = {
+    checkScript(script)
+    new ScenePlayerNode(script.asInstanceOf[Scene])
+
   }
 }
 
-class SceneButton(peer: ScriptComponent) extends AbstractScriptButton(peer) {
-  type peertype = Scene
+class SceneButton(peer: Scene) extends EditorScriptButton(peer) {
 }
 
-class SceneNode(peer: ScriptComponent) extends AbstractScriptNode(peer) {
-  type peertype = Scene
+class ScenePlayerNode(sc: Scene) extends PlayerScriptNode[Scene](sc) {
+  
+}
+
+class SceneNode(peer: Scene) extends EditorScriptNode[Scene](peer) with InputGUI[Scene] {
+  
 }

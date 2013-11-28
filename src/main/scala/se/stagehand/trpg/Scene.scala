@@ -1,7 +1,7 @@
 package se.stagehand.trpg
 
 import se.stagehand.lib.scripting._
-import scala.xml.Elem
+import scala.xml._
 import scala.swing._
 import scala.swing.event.Key
 
@@ -23,7 +23,9 @@ class Scene extends ScriptComponent with Input {
       x.trigger
     )
   }
-  def readInstructions(in: Elem) {}
+  override def readInstructions(in: Node) {
+    super.readInstructions(in)
+  }
 
   override def generateInstructions = {
     implicit var xml = super.generateInstructions
