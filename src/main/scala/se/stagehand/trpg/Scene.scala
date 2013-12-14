@@ -13,12 +13,12 @@ class Scene extends ScriptComponent with Input {
   def act:Unit = {
     loop {
       react {
-        case Start => executeInstructions
+        case Start(_) => executeInstructions()
       }
     }
   }
     
-  def executeInstructions {
+  def executeInstructions(params: Any*) {
     effects.foreach( x => 
       x.trigger
     )

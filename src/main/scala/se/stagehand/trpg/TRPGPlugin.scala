@@ -9,6 +9,6 @@ class TRPGPlugin extends ScriptPlugin {
     
   val guis = List(SceneGUI)
     
-  def scriptcomponents: Array[ScriptComponent] = Array(new Scene)
+  val scriptcomponents: Array[ScriptComponent] = Array(new Scene)
   
 }
