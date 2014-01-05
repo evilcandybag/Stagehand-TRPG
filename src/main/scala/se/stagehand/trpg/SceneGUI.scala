@@ -12,8 +12,18 @@ import scala.swing.event.MouseClicked
 import scala.swing.Button
 import scala.swing.Action
 import se.stagehand.swing.editor.EffectSelector
+import scala.swing.BoxPanel
+import scala.swing.Orientation
+import scala.swing.Swing
+import scala.swing.Swing.Embossing
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Graphics2D
+import se.stagehand.swing.lib.Vector2._
+import se.stagehand.lib.Log
 
 object SceneGUI extends ScriptGUI {
+  private val log = Log.getLog(this.getClass())
   val peer = classOf[Scene]
   
   def menuItem(script: ScriptComponent) = {
@@ -36,23 +46,52 @@ class SceneButton(peer: Scene) extends EditorScriptButton(peer) {
 }
 
 class ScenePlayerNode(sc: Scene) extends PlayerScriptNode[Scene](sc) {
-  listenTo(mouse.clicks)
+  private val log = Log.getLog(this.getClass)
   def title = script.displayName
-  reactions += {
-    case e:MouseClicked if e.peer.getButton == BUTTON1 => {
-      script.executeInstructions()
+  
+  val fxGUI = new BoxPanel(Orientation.Vertical) {
+    for (e <- script.effects) {
+      contents += GUIManager.getGUI[EffectGUI](e.getClass).playerItem(e)
     }
-  }
+  } 
+  layout(fxGUI) = Position.Center
+  repaint
+  revalidate
+  script.effects.foreach(x => log.debug(x.toString))
+  layout.keys.foreach(x => log.debug(x.toString))
 }
 
-class SceneNode(peer: Scene) extends EditorScriptNode[Scene](peer) with InputGUI[Scene] {
+class SceneNode(script: Scene) extends EditorScriptNode[Scene](script) with InputGUI[Scene] {
+  val effectPanel = new BoxPanel(Orientation.Vertical) {
+    border = Swing.EtchedBorder(Swing.Raised)
+    
+    visible = true
+  }
   val addbutton = new Button("+") {
     action = new Action("+") {
       def apply {
         val efs = EffectSelector.pickEffectsAsInstances
         
+        efs.foreach(x => {
+          script.add(x)
+          val gui = GUIManager.getGUI[EffectGUI](x.getClass).editorItem(x)
+          effectPanel.contents += gui
+          pan.repaint
+          pan.revalidate
+        })
+        
+		  me.peer.setSize(me.preferredSize)
+		  me.revalidate
       }
     }
   }
+  pan.layout(effectPanel) = Position.Center
   pan.layout(addbutton) = Position.South
+ 
+  
+  
+  override def paint(g:Graphics2D) {
+//    peer.setSize(preferredSize)
+    super.paint(g)
+  }
 }
