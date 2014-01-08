@@ -18,14 +18,6 @@ class Scene(id:Int) extends ScriptComponent(id) with Input {
   def add(e:Effect) = _effects = e :: _effects
   def remove(e:Effect) = _effects = _effects diff List(e)
   def effects = _effects
-  
-  def act:Unit = {
-    loop {
-      react {
-        case Start(_) => executeInstructions()
-      }
-    }
-  }
     
   def executeInstructions(params: Any*) {
     _effects.foreach( x => 
