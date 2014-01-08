@@ -49,10 +49,15 @@ class ScenePlayerNode(sc: Scene) extends PlayerScriptNode[Scene](sc) {
   private val log = Log.getLog(this.getClass)
   def title = script.displayName
   
-  val fxGUI = new BoxPanel(Orientation.Vertical) {
+  val fxGUI = new ContentPanel("FX") {
     for (e <- script.effects) {
-      contents += GUIManager.getGUI[EffectGUI](e.getClass).playerItem(e)
+      val item = GUIManager.getGUI[EffectGUI](e.getClass).playerItem(e)
+      contents += item
+      item.refresh
+      revalidate
+      repaint
     }
+    
   } 
   layout(fxGUI) = Position.Center
   repaint
