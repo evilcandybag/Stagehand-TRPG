@@ -21,6 +21,10 @@ import java.awt.Dimension
 import java.awt.Graphics2D
 import se.stagehand.swing.lib.Vector2._
 import se.stagehand.lib.Log
+import se.stagehand.swing.assets.ImageAssets
+import scala.swing.FlowPanel
+import se.stagehand.lib.scripting.StagehandComponent
+import se.stagehand.lib.scripting.Effect
 
 object SceneGUI extends ScriptGUI {
   private val log = Log.getLog(this.getClass())
@@ -72,26 +76,15 @@ class SceneNode(script: Scene) extends EditorScriptNode[Scene](script) with Inpu
     
     visible = true
   }
-  val addbutton = new Button("+") {
-    action = new Action("+") {
-      def apply {
-        val efs = EffectSelector.pickEffectsAsInstances
-        
-        efs.foreach(x => {
-          script.add(x)
-          val gui = GUIManager.getGUI[EffectGUI](x.getClass).editorItem(x)
-          effectPanel.contents += gui
-          pan.repaint
-          pan.revalidate
-        })
-        
-		  me.peer.setSize(me.preferredSize)
-		  me.revalidate
-      }
-    }
-  }
+  val addbutton = new AddEffectsButton(this,effectPanel,(gui:EditorEffectItem[_],comp: Effect) => {
+    script.add(comp)
+    effectPanel.contents += gui
+  })
+    
   pan.layout(effectPanel) = Position.Center
-  pan.layout(addbutton) = Position.South
+  pan.layout(new FlowPanel {
+    contents += addbutton
+  }) = Position.South
  
   
   
