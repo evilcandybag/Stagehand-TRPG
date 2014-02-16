@@ -86,8 +86,18 @@ class SceneNode(script: Scene) extends EditorScriptNode[Scene](script) with Inpu
     contents += addbutton
   }) = Position.South
  
-  
-  
+  script.effects.foreach(e => {
+    val gui = GUIManager.componentByID[EditorEffectItem[_]](e.id)
+    gui match {
+      case Some(g) => {
+        effectPanel.contents += g
+      }
+      case None => {
+        effectPanel.contents += GUIManager.editorItem(e)
+      }
+    }
+  })
+  refresh
   override def paint(g:Graphics2D) {
 //    peer.setSize(preferredSize)
     super.paint(g)
