@@ -7,21 +7,20 @@ import scala.swing.event.Key
 import se.stagehand.lib.Log
 import se.stagehand.lib.scripting.network.Directives
 
-class Scene(id:Int) extends ScriptComponent(id) with Input {
+class Event(id:Int) extends ScriptComponent(id) with Input {
   import Directives._
   
   private val log = Log.getLog(this.getClass())
   def this() = this(ID.unique)
   
-  override def componentName = "Scene"
+  override def componentName = "Event"
   val description = "A collection of scenes that can be activated at the same time."
     
     
   private var _effects: List[Effect] = List()
   
   def add(e:Effect) = {
-    log.debug("ADDING ARG TO EFFECT: " + e)
-    e.addArg(Persistence.ARG, Persistence.CLEAR)
+    e.addArg(Persistence.ARG, Persistence.KEEP)
     _effects = e :: _effects
   }
   def remove(e:Effect) = {
